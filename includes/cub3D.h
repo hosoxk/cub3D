@@ -21,7 +21,7 @@ typedef struct	s_point
 
 typedef struct	s_player
 {
-	t_point		position;
+	t_point		pos;
 }	t_player;
 
 typedef struct	s_map

@@ -1,10 +1,10 @@
 # project name and compilation settings
-NAME         = cub3D
+NAME        = cub3D
 
-CC           = cc
-CFLAGS       = -g3 -Wall -Werror -Wextra
+CC          = cc
+CFLAGS      = -g3 -Wall -Werror -Wextra
 MAKEFLAGS   += -s
-PFLAGS = -l Xext -l X11 -l m -l z
+PFLAGS		= -l Xext -l X11 -lm
 
 # directories
 SRC_DIR     = ./sources
@@ -38,7 +38,7 @@ $(NAME): $(OBJ_FILES) $(LIBFT) $(LIBMLX)
 	@echo "$(MAGENTA)Using compiler: $(CC)$(RESET)"
 	@echo "$(MAGENTA)Using flags: $(CFLAGS) $(PROJECTFLAGS) $(RESET)"
 	@echo "$(GREENBLUE)Linking $(NAME)...$(RESET)"
-	$(CC) $(CFLAGS) $(PFLAGS) $(OBJ_FILES) $(PROJECTFLAGS) $(LIBFT) $(LIBMLX) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ_FILES) $(LIBFT) $(LIBMLX) $(PFLAGS) -o $(NAME)
 	@echo "$(GREEN)Compilation successful!$(RESET)"
 
 # Rule to build object files for normal build
@@ -49,7 +49,7 @@ $(NAME): $(OBJ_FILES) $(LIBFT) $(LIBMLX)
 # Libmlx build
 $(LIBMLX):
 	@echo "$(GREENBLUE)Building libmlx$(RESET)"
-	$(MAKE) -C $(MLX_DIR) > /dev/null 2>&1
+	$(MAKE) -C $(MLX_DIR)
 	@echo "$(GREEN)Libmlx compiled succesfully!$(RESET)"
 
 # Libft build

@@ -43,7 +43,7 @@ static void	init_mlx(t_game *game)
 		perror("Error: could not initialize MLX\n");
 		exit(1);
 	}
-	game->window = mlx_new_window(game->mlx, 100, 100, "cub3D"); //TODO //to be fixed
+	game->window = mlx_new_window(game->mlx, 1024, 512, "cub3D"); //TODO //to be fixed
 	if (!game->window)
 	{
 		free_mlx(game);
@@ -52,16 +52,27 @@ static void	init_mlx(t_game *game)
 	}
 }
 
+static void	draw_player(t_game game)
+{
+	mlx_pixel_put(game.mlx, game.window, game.player.pos.x, game.player.pos.y, 0xFFFFF);
+}
+
+static int	close_window(void)
+{
+	exit(0);
+	return (0);
+}
+
 t_game	init_game(void) //TODO
 {
 	printf(BOLD_BLUE"Initializing game\n"RESET);
 	t_game		game;
 //	t_player	player;
-//	t_map		map;
 
-//	map = read_map();
-//	game.player = player;
-//	game.map = map;
+	game.player.pos.x = 300;
+	game.player.pos.y = 300;
+
+//	game.map = read_map();
 	init_mlx(&game);
 	return (game);
 }
@@ -73,6 +84,9 @@ int	main(int argc, char **argv)
 	if (!check_input(argc, argv))
 		return (1);
 	game = init_game();	//TODO
+	mlx_hook(game.window, 17, 0, close_window, NULL);
+	mlx_loop(game.mlx);
+	draw_player(game);
 	free_mlx(&game);
 	return (0);
 }
