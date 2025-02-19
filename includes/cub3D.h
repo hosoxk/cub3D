@@ -13,6 +13,20 @@
 # define BOLD_GREEN "\033[32m"
 # define RESET "\033[0m"
 
+# define WIN_HEIGHT 521
+# define WIN_WIDTH 1024
+# define SIZE_P_MINIMAP 20
+# define ESC_KEY 65307
+# define LEFT_ARROW 65361
+# define RIGHT_ARROW 65363
+# define DOWN_ARROW 65364
+# define UP_ARROW 65362
+# define W_KEY 119
+# define A_KEY 97
+# define S_KEY 115
+# define D_KEY 100
+# define Q_KEY 113
+
 typedef struct	s_point
 {
 	int		x;
