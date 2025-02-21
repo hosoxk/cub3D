@@ -32,6 +32,7 @@
 # define SIZE_P_MINIMAP 20
 # define MOVE_SPEED 0.003
 # define MOUSE_SENSITIVITY 0.0004
+# define MOUSE_RESET_MARGIN 15
 
 // *** KEYCODES ***
 # define ESC_KEY 65307

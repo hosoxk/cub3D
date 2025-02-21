@@ -74,10 +74,11 @@ int	mouse_motion(int x, int y, t_game *game)
 		game->player.angle += 2 * M_PI;
 	game->last_mouse_x = WIN_WIDTH / 2;
 	// Reset the mouse if it moves outside the margin
-	if (abs(x - center_x) > 30 || abs(y - center_y) > 30) { // TODO MOUSE_RESET_MARGIN
+	if (abs(x - center_x) > MOUSE_RESET_MARGIN || abs(y - center_y) > MOUSE_RESET_MARGIN)
+	{
 		mlx_mouse_move(game->mlx, game->window, center_x, center_y);
 		game->last_mouse_x = center_x;
-		}
+	}
 	return (0);
 }
 

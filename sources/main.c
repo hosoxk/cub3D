@@ -135,7 +135,6 @@ int	main(int argc, char **argv)
 	game = init_game();	//TODO
 	// *** SET UP EVENTS ***
 	setup_hooks(&game);
-//	display(&game);
 	// *** GAME LOOP ***
 	mlx_loop(game.mlx);
 	free_mlx(&game);
