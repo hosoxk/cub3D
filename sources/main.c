@@ -1,9 +1,16 @@
-#include "../includes/cub3D.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/21 15:47:17 by yde-rudd          #+#    #+#             */
+/*   Updated: 2025/02/21 17:27:08 by yde-rudd         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static void	print_error(char *str)
-{
-	printf(BOLD_RED"%s\n"RESET, str);
-}
+#include "../includes/cub3D.h"
 
 static bool	is_cub_file(const char *filename)
 {
@@ -24,95 +31,31 @@ static bool	check_input(int argc, char **argv)
 	return (true);
 }
 
-void	free_mlx(t_game	*game)
-{
-	printf(BOLD_BLUE"Freeing MLX\n"RESET);
-	if (game->window)
-		mlx_destroy_window(game->mlx, game->window);
-	mlx_destroy_display(game->mlx);
-	if (game->mlx)
-		free(game->mlx);
-}
-
-static void	init_mlx(t_game *game)
-{
-	printf(BOLD_BLUE"Initializing MLX\n"RESET);
-	game->mlx = mlx_init();
-	if (!game->mlx)
-	{
-		perror("Error: could not initialize MLX\n");
-		exit(1);
-	}
-	game->window = mlx_new_window(game->mlx, WIN_WIDTH, WIN_HEIGHT, "cub3D");
-	if (!game->window)
-	{
-		free_mlx(game);
-		print_error("Error: could not create a window");
-		exit(1);
-	}
-}
-
 static void	draw_player(t_game *game)
 {
-	mlx_pixel_put(game->mlx, game->window, game->player.pos.x, game->player.pos.y, 0xFF000);
+	mlx_pixel_put(game->mlx, game->window, game->player.pos.x,
+		game->player.pos.y, 0xFF000);
 }
 
-static int	close_window(void)
+int	update_player(t_game *game)
 {
-	exit(0);
+	if (game->up_key)
+		game->player.pos.y -= MOVE_SPEED;
+	if (game->down_key)
+		game->player.pos.y += MOVE_SPEED;
+	if (game->left_key)
+		game->player.pos.x -= MOVE_SPEED;
+	if (game->right_key)
+		game->player.pos.x += MOVE_SPEED;
+	printf("Player position updated;\nx: %f\ny: %f\n", game->player.pos.x, game->player.pos.y);
 	return (0);
 }
 
-t_game	init_game(void) //TODO
-{
-	printf(BOLD_BLUE"Initializing game\n"RESET);
-	t_game		game;
-//	t_player	player;
-
-	game.player.pos.x = 300;
-	game.player.pos.y = 300;
-
-//	game.map = read_map();
-	init_mlx(&game);
-	return (game);
-}
-
-static void	display(t_game *game)
+int	display(t_game *game)
 {
 	mlx_clear_window(game->mlx, game->window);
 	draw_player(game);
-}
-
-int	key_press(int keycode, t_game *game)
-{
-	printf("Keycode pressed: %d\n", keycode);
-	if (keycode == ESC_KEY || keycode == Q_KEY)
-	{
-		free_mlx(game);
-		close_window();
-	}
-	if (keycode == UP_ARROW || keycode == Q_KEY)
-	{
-		game->player.pos.y -= 10;
-		draw_player(game);
-	}
-	if (keycode == DOWN_ARROW || keycode == W_KEY)
-		game->player.pos.y += 10;
-	if (keycode == LEFT_ARROW || keycode == A_KEY)
-		game->player.pos.x -= 10;
-	if (keycode == RIGHT_ARROW || keycode == D_KEY)
-		game->player.pos.x += 10;
-	printf("Player position updated;\nx: %d\ny: %d\n", game->player.pos.x, game->player.pos.y);
-	display(game);
 	return (0);
-}
-
-static void	setup_hooks(t_game *game)
-{
-	// closes window and exits program when red cross is used in window
-	mlx_hook(game->window, 17, 0, close_window, NULL);
-	// sets up key events
-	mlx_key_hook(game->window, key_press, game);
 }
 
 int	main(int argc, char **argv)
@@ -122,10 +65,10 @@ int	main(int argc, char **argv)
 	if (!check_input(argc, argv))
 		return (1);
 	game = init_game();	//TODO
-	printf("Player position;\nx: %d\ny: %d\n", game.player.pos.x, game.player.pos.y);
+	printf("Player position;\nx: %f\ny: %f\n", game.player.pos.x, game.player.pos.y);
 	// *** SET UP EVENTS ***
 	setup_hooks(&game);
-	display(&game);
+//	display(&game);
 	// *** GAME LOOP ***
 	mlx_loop(game.mlx);
 	free_mlx(&game);

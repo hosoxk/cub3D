@@ -12,10 +12,12 @@ LIBFT_DIR   = ./sources/libft
 MLX_DIR		= ./sources/minilibx-linux
 
 # source and object files
-SRC_FILES = $(SRC_DIR)/main.c
+SRC_FILES = $(SRC_DIR)/main.c \
+			$(SRC_DIR)/init.c \
+			$(SRC_DIR)/events.c \
+			$(SRC_DIR)/close.c
 
 OBJ_FILES        = $(SRC_FILES:.c=.o)
-DEBUG_OBJ_FILES  = $(SRC_FILES:.c=.debug.o)
 
 # libraries
 LIBFT       = $(LIBFT_DIR)/libft.a
