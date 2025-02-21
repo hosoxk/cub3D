@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:47:17 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/21 17:27:08 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/02/21 19:12:20 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,58 @@ static bool	check_input(int argc, char **argv)
 	return (true);
 }
 
+static void	draw_line(t_game *game, int x1, int y1)
+{
+	int	x0;
+	int	y0;
+	int	dx;
+	int	dy;
+	int	sx;
+	int	sy;
+	int	err;
+//	int	current_x;
+//	int	current_y;
+
+	x0 = game->player.pos.x;
+	y0 = game->player.pos.y;
+	dx = abs(x1 - x0); // calculate absolute diff in x
+	dy = abs(y1 - y0); // calculate absolute diff in y
+	sx = (x0 < x1) ? 1 : -1; // step direction in x
+	sy = (y0 < y1) ? 1 : -1; // step direction in y
+	err = dx - dy; // error value
+	while (1)
+	{
+		mlx_pixel_put(game->mlx, game->window, x0, y0, 0xFFFFFF);
+		if (x0 == x1 && y0 == y1)
+			break ;
+		int	e2;
+		e2 = 2 * err;
+		if (e2 > -dy)
+		{
+			err -= dy;
+			x0 += sx;
+		}
+		if (e2 < dx)
+		{
+			err += dx;
+			y0 += sy;
+		}
+	}
+}
+
 static void	draw_player(t_game *game)
 {
+	int	end_x;
+	int	end_y;
+	int	line_length; // TODO can be removed after
+
+	line_length = 50;
+	// Calculate the endpoint of the line based on the player's angle
+	end_x = game->player.pos.x + line_length * cos(game->player.angle);
+	end_y = game->player.pos.y + line_length * sin(game->player.angle);
 	mlx_pixel_put(game->mlx, game->window, game->player.pos.x,
 		game->player.pos.y, 0xFF000);
+	draw_line(game, end_x, end_y);
 }
 
 int	update_player(t_game *game)

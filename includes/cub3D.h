@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 17:03:42 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/21 17:26:11 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/02/21 18:00:23 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define WIN_HEIGHT 521
 # define WIN_WIDTH 1024
 # define SIZE_P_MINIMAP 20
-# define MOVE_SPEED 0.1
+# define MOVE_SPEED 0.01
 
 // *** KEYCODES ***
 # define ESC_KEY 65307
@@ -54,6 +54,7 @@ typedef struct s_point
 typedef struct s_player
 {
 	t_point		pos;
+	double		angle;
 }	t_player;
 
 typedef struct s_map
@@ -73,6 +74,9 @@ typedef struct s_game
 	bool		down_key;
 	bool		left_key;
 	bool		right_key;
+	int			mouse_x;
+	int			mouse_y;
+	int			last_mouse_x;
 }	t_game;
 
 // *** INITIALIZING ***
@@ -84,6 +88,7 @@ int		display(t_game *game);
 int		update_player(t_game *game);
 int		key_press(int keycode, t_game *game);
 int		key_release(int keycode, t_game *game);
+int		mouse_motion(int x, int y, t_game *game);
 
 // *** FREEING ***
 void	free_mlx(t_game *game);
