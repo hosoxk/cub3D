@@ -30,7 +30,8 @@
 # define WIN_HEIGHT 521
 # define WIN_WIDTH 1024
 # define SIZE_P_MINIMAP 20
-# define MOVE_SPEED 0.01
+# define MOVE_SPEED 0.003
+# define MOUSE_SENSITIVITY 0.0004
 
 // *** KEYCODES ***
 # define ESC_KEY 65307

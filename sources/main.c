@@ -31,6 +31,7 @@ static bool	check_input(int argc, char **argv)
 	return (true);
 }
 
+// *** Bresenhams line drawing algorithm
 static void	draw_line(t_game *game, int x1, int y1)
 {
 	int	x0;
@@ -40,8 +41,6 @@ static void	draw_line(t_game *game, int x1, int y1)
 	int	sx;
 	int	sy;
 	int	err;
-//	int	current_x;
-//	int	current_y;
 
 	x0 = game->player.pos.x;
 	y0 = game->player.pos.y;
@@ -72,30 +71,50 @@ static void	draw_line(t_game *game, int x1, int y1)
 
 static void	draw_player(t_game *game)
 {
-	int	end_x;
-	int	end_y;
 	int	line_length; // TODO can be removed after
 
 	line_length = 50;
 	// Calculate the endpoint of the line based on the player's angle
-	end_x = game->player.pos.x + line_length * cos(game->player.angle);
-	end_y = game->player.pos.y + line_length * sin(game->player.angle);
-	mlx_pixel_put(game->mlx, game->window, game->player.pos.x,
-		game->player.pos.y, 0xFF000);
-	draw_line(game, end_x, end_y);
+    int end_x = game->player.pos.x + line_length * cos(game->player.angle);
+    int end_y = game->player.pos.y + line_length * sin(game->player.angle);
+
+    // Convert positions to integers for rendering
+    int player_x = (int)round(game->player.pos.x);
+    int player_y = (int)round(game->player.pos.y);
+    int rounded_end_x = (int)round(end_x);
+    int rounded_end_y = (int)round(end_y);
+	mlx_pixel_put(game->mlx, game->window, player_x, player_y, 0xFF000);
+	draw_line(game, rounded_end_x, rounded_end_y);
 }
 
 int	update_player(t_game *game)
 {
+	double	cos_angle;
+	double	sin_angle;
+
+	cos_angle = cos(game->player.angle);
+	sin_angle = sin(game->player.angle);
 	if (game->up_key)
-		game->player.pos.y -= MOVE_SPEED;
+	{
+		game->player.pos.x += MOVE_SPEED * cos_angle;
+		game->player.pos.y += MOVE_SPEED * sin_angle;
+	}
 	if (game->down_key)
-		game->player.pos.y += MOVE_SPEED;
+	{
+		game->player.pos.x -= MOVE_SPEED * cos_angle;
+		game->player.pos.y -= MOVE_SPEED * sin_angle;
+	}
 	if (game->left_key)
-		game->player.pos.x -= MOVE_SPEED;
+	{
+		game->player.pos.x += MOVE_SPEED * sin_angle;
+		game->player.pos.y -= MOVE_SPEED * cos_angle;
+	}
 	if (game->right_key)
-		game->player.pos.x += MOVE_SPEED;
-	printf("Player position updated;\nx: %f\ny: %f\n", game->player.pos.x, game->player.pos.y);
+	{
+		game->player.pos.x -= MOVE_SPEED * sin_angle;
+		game->player.pos.y += MOVE_SPEED * cos_angle;
+	}
+//	printf("Player position updated;\nx: %f\ny: %f\n", game->player.pos.x, game->player.pos.y);
 	return (0);
 }
 
@@ -103,6 +122,7 @@ int	display(t_game *game)
 {
 	mlx_clear_window(game->mlx, game->window);
 	draw_player(game);
+	//printf(BOLD_RED"Players angle: %f\n"RESET, game->player.angle);
 	return (0);
 }
 
@@ -113,7 +133,6 @@ int	main(int argc, char **argv)
 	if (!check_input(argc, argv))
 		return (1);
 	game = init_game();	//TODO
-	printf("Player position;\nx: %f\ny: %f\n", game.player.pos.x, game.player.pos.y);
 	// *** SET UP EVENTS ***
 	setup_hooks(&game);
 //	display(&game);

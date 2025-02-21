@@ -36,7 +36,7 @@ static void	init_keys(t_game *game)
 	game->down_key = false;
 	game->left_key = false;
 	game->right_key = false;
-	game->mouse_x = WIN_WIDTH / 2; // TODO change according to window width and height
+	game->mouse_x = WIN_WIDTH / 2;
 	game->mouse_y = WIN_HEIGHT / 2;
 	game->last_mouse_x = game->mouse_x;
 }
