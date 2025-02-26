@@ -44,16 +44,6 @@ int	key_release(int keycode, t_game *game)
 	return (0);
 }
 
-int	game_loop(t_game *game)
-{
-	// TODO handle_input to here
-	// update game logic
-	update_player(game);
-	// render scene
-	display(game);
-	return (0);
-}
-
 // mouse changes the angle of the player
 // TODO TODO TODO need to find a way to avoid overload
 int	mouse_motion(int x, int y, t_game *game)
@@ -79,6 +69,16 @@ int	mouse_motion(int x, int y, t_game *game)
 		mlx_mouse_move(game->mlx, game->window, center_x, center_y);
 		game->last_mouse_x = center_x;
 	}
+	return (0);
+}
+
+int	game_loop(t_game *game)
+{
+	// TODO handle_input to here
+	// update game logic
+	update_player(game);
+	// render scene
+	display(game);
 	return (0);
 }
 

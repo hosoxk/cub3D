@@ -19,13 +19,6 @@
 # include "../sources/libft/libft.h"
 # include "../sources/minilibx-linux/mlx.h"
 
-// *** COLOR CODES ***
-# define BOLD_MAGENTA "\033[35m"
-# define BOLD_RED "\033[31m"
-# define BOLD_BLUE "\033[1;94m"
-# define BOLD_GREEN "\033[32m"
-# define RESET "\033[0m"
-
 // *** GAME INFORMATION ***
 # define WIN_HEIGHT 521
 # define WIN_WIDTH 1024
@@ -46,6 +39,13 @@
 # define D_KEY 100
 # define Q_KEY 113
 
+// *** COLOR CODES ***
+# define BOLD_MAGENTA "\033[35m"
+# define BOLD_RED "\033[31m"
+# define BOLD_BLUE "\033[1;94m"
+# define BOLD_GREEN "\033[32m"
+# define RESET "\033[0m"
+
 // *** STRUCTS ***
 typedef struct s_point
 {
@@ -57,6 +57,8 @@ typedef struct s_player
 {
 	t_point		pos;
 	double		angle;
+	t_point		prev_pos;
+	double		prev_angle;
 }	t_player;
 
 typedef struct s_map
@@ -79,6 +81,8 @@ typedef struct s_game
 	int			mouse_x;
 	int			mouse_y;
 	int			last_mouse_x;
+	// pixel buffer to store the current screen state
+	u_int32_t	**screen_buffer[WIN_WIDTH][WIN_HEIGHT];
 }	t_game;
 
 // *** INITIALIZING ***
@@ -98,5 +102,6 @@ int		close_window(void);
 
 // *** UTILS ***
 void	print_error(char *str);
+void	free_game(t_game *game);
 
 #endif

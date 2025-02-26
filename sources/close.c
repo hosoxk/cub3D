@@ -22,13 +22,3 @@ void	print_error(char *str)
 {
 	printf(BOLD_RED"%s\n"RESET, str);
 }
-
-void	free_mlx(t_game	*game)
-{
-	printf(BOLD_BLUE"Freeing MLX\n"RESET);
-	if (game->window)
-		mlx_destroy_window(game->mlx, game->window);
-	mlx_destroy_display(game->mlx);
-	if (game->mlx)
-		free(game->mlx);
-}

@@ -45,7 +45,37 @@ static void	init_player(t_game *game)
 {
 	game->player.pos.x = 300;
 	game->player.pos.y = 300;
-	game->player.angle = 0;
+	game->player.angle = 0.0;
+	game->player.prev_pos.x = game->player.pos.x;
+	game->player.prev_pos.y = game->player.pos.y;
+	game->player.prev_angle = game->player.angle;
+}
+
+//TODO
+/*
+static t_map	*init_map(void)
+{
+	return (map);
+}
+*/
+
+static bool	init_screen_buffer(t_game *game)
+{
+	int	y;
+
+	y = 0;
+	game->screen_buffer = malloc(WIN_HEIGHT * sizeof(u_int32_t));
+	if (!game->screen_buffer)
+		return (print_error("Failed to allocate screen buffer"), false);
+	while (y < WIN_HEIGHT)
+	{
+		game->screen_buffer[y] = malloc(WIN_WIDTH * sizeof (u_int32_t));
+		if (!game->screen_buffer[y])
+			return (print_error("Failed to allocate screen buffer row"), false);
+		memset(game->screen_buffer[y], 0, WIN_WIDTH * sizeof (u_int32_t));
+		y++;
+	}
+	return (true);
 }
 
 t_game	init_game(void) //TODO
@@ -55,7 +85,9 @@ t_game	init_game(void) //TODO
 
 	init_keys(&game);
 	init_player(&game);
-//	game.map = read_map();
+//	game.map = init_map();
 	init_mlx(&game);
+	init_screen_buffer(game->screen_buffer);
+	ft_memset(game.screen_buffer, 0, sizeof(game.screen_buffer));
 	return (game);
 }

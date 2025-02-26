@@ -31,40 +31,52 @@ static bool	check_input(int argc, char **argv)
 	return (true);
 }
 
-// *** Bresenhams line drawing algorithm
-static void	draw_line(t_game *game, int x1, int y1)
+static void	draw_pixel(t_game *game, int x, int y, u_int32_t color)
 {
-	int	x0;
-	int	y0;
+	if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
+	{
+		if (game->screen_buffer[x][y] != color)
+		{
+			mlx_pixel_put(game->mlx, game->window, x, y, color);
+			game->screen_buffer[x][y] = color;
+		}
+	}
+}
+
+// *** Bresenhams line drawing algorithm
+static void	draw_line(t_game *game, t_point start, t_point end, u_int32_t color)
+{
+	int	x;
+	int	y;
 	int	dx;
 	int	dy;
 	int	sx;
 	int	sy;
 	int	err;
 
-	x0 = game->player.pos.x;
-	y0 = game->player.pos.y;
-	dx = abs(x1 - x0); // calculate absolute diff in x
-	dy = abs(y1 - y0); // calculate absolute diff in y
-	sx = (x0 < x1) ? 1 : -1; // step direction in x
-	sy = (y0 < y1) ? 1 : -1; // step direction in y
+	dx = fabs(end.x - start.x); // calculate absolute diff in x
+	dy = fabs(end.y - start.y); // calculate absolute diff in y
+	sx = (start.x < end.x) ? 1 : -1; // step direction in x
+	sy = (start.y < end.y) ? 1 : -1; // step direction in y
 	err = dx - dy; // error value
+	x = start.x;
+	y = start.y;
 	while (1)
 	{
-		mlx_pixel_put(game->mlx, game->window, x0, y0, 0xFFFFFF);
-		if (x0 == x1 && y0 == y1)
+		draw_pixel(game, x, y, color);
+		if (x == end.x && y == end.y)
 			break ;
 		int	e2;
 		e2 = 2 * err;
 		if (e2 > -dy)
 		{
 			err -= dy;
-			x0 += sx;
+			x += sx;
 		}
 		if (e2 < dx)
 		{
 			err += dx;
-			y0 += sy;
+			y += sy;
 		}
 	}
 }
@@ -83,8 +95,11 @@ static void	draw_player(t_game *game)
     int player_y = (int)round(game->player.pos.y);
     int rounded_end_x = (int)round(end_x);
     int rounded_end_y = (int)round(end_y);
-	mlx_pixel_put(game->mlx, game->window, player_x, player_y, 0xFF000);
-	draw_line(game, rounded_end_x, rounded_end_y);
+	// draw the player
+	draw_pixel(game, player_x, player_y, 0xFF000);
+	// draw the angle representation
+	  t_point end = {rounded_end_x, rounded_end_y};
+	draw_line(game, game->player.pos, end, 0xFFFFFF);
 }
 
 int	update_player(t_game *game)
@@ -118,9 +133,30 @@ int	update_player(t_game *game)
 	return (0);
 }
 
+static void	clear_prev_player_and_line(t_game *game)
+{
+	    // Clear the previous player position (set it back to background color)
+    int prev_player_x = (int)round(game->player.prev_pos.x);
+    int prev_player_y = (int)round(game->player.prev_pos.y);
+    draw_pixel(game, prev_player_x, prev_player_y, 0x000000); // Background color
+
+    // Clear the previous line
+    int prev_end_x = game->player.prev_pos.x + 50 * cos(game->player.prev_angle);
+    int prev_end_y = game->player.prev_pos.y + 50 * sin(game->player.prev_angle);
+	t_point end = {(int)round(prev_end_x), (int)round(prev_end_y)};
+    draw_line(game, game->player.prev_pos, end, 0x000000);
+
+    // Update the previous player position and angle
+    game->player.prev_pos.x = game->player.pos.x;
+    game->player.prev_pos.y = game->player.pos.y;
+    game->player.prev_angle = game->player.angle;
+}
+
 int	display(t_game *game)
 {
-	mlx_clear_window(game->mlx, game->window);
+//	mlx_clear_window(game->mlx, game->window);
+	clear_prev_player_and_line(game);
+//	draw_minimap(); // TODO
 	draw_player(game);
 	//printf(BOLD_RED"Players angle: %f\n"RESET, game->player.angle);
 	return (0);

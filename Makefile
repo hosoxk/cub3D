@@ -15,7 +15,8 @@ MLX_DIR		= ./sources/minilibx-linux
 SRC_FILES = $(SRC_DIR)/main.c \
 			$(SRC_DIR)/init.c \
 			$(SRC_DIR)/events.c \
-			$(SRC_DIR)/close.c
+			$(SRC_DIR)/close.c \
+			$(SRC_DIR)/utils.c
 
 OBJ_FILES        = $(SRC_FILES:.c=.o)
 
