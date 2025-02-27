@@ -6,7 +6,7 @@
 /*   By: kvanden- <kvanden-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 02:03:33 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/01/02 12:50:51 by kvanden-         ###   ########.fr       */
+/*   Updated: 2025/02/27 00:02:08 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,6 @@ char				**ft_copy_tab(char **tab);
 int					ft_tab_len(char **tab);
 void				ft_print_tab(char **tab);
 char				*ft_strappend(char *str, char c);
+int					clamp(int value, int min, int max);
 
 #endif

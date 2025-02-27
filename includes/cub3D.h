@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 17:03:42 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/21 18:00:23 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/02/27 01:20:37 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@
 # include <stdio.h>
 # include "../sources/libft/libft.h"
 # include "../sources/minilibx-linux/mlx.h"
+# include <time.h>
 
 // *** GAME INFORMATION ***
 # define WIN_HEIGHT 521
 # define WIN_WIDTH 1024
 # define SIZE_P_MINIMAP 20
-# define MOVE_SPEED 0.003
+# define MOVE_SPEED 0.03
 # define MOUSE_SENSITIVITY 0.0004
-# define MOUSE_RESET_MARGIN 15
+# define MOUSE_RESET_MARGIN 20
+# define MOUSE_RESET_THROTTLE 5 // mouse resets per second
 
 // *** KEYCODES ***
 # define ESC_KEY 65307
@@ -71,7 +73,7 @@ typedef struct s_map
 typedef struct s_game
 {
 	t_player	player;
-	t_map		map;
+//	t_map		map;
 	void		*mlx;
 	void		*window;
 	bool		up_key;
@@ -82,7 +84,7 @@ typedef struct s_game
 	int			mouse_y;
 	int			last_mouse_x;
 	// pixel buffer to store the current screen state
-	u_int32_t	**screen_buffer[WIN_WIDTH][WIN_HEIGHT];
+	u_int32_t	**screen_buffer;
 }	t_game;
 
 // *** INITIALIZING ***

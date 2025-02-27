@@ -6,7 +6,7 @@
 #    By: kvanden- <kvanden-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/25 18:01:07 by yde-rudd          #+#    #+#              #
-#    Updated: 2024/12/30 18:53:03 by yde-rudd         ###   ########.fr        #
+#    Updated: 2025/02/27 00:02:31 by yde-rudd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,7 +82,8 @@ SRC = $(SRC_DIR)/ft_isalpha.c \
 	$(SRC_DIR)/ft_free_tab.c \
 	$(SRC_DIR)/ft_copy_tab.c \
 	$(SRC_DIR)/ft_print_tab.c \
-	$(SRC_DIR)/ft_strappend.c
+	$(SRC_DIR)/ft_strappend.c \
+	$(SRC_DIR)/clamp.c
 
 PRINTF_SRC = $(PRINTF_DIR)/ft_printf.c \
 			 $(PRINTF_DIR)/ft_printf_char.c \

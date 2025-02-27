@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:47:17 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/21 19:12:20 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/02/27 01:17:51 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,24 @@ static bool	is_cub_file(const char *filename)
 
 static bool	check_input(int argc, char **argv)
 {
-	(void)argv;
-	if (argc != 2 || !is_cub_file(argv[1]))
+	if (argc != 2 || !argv[1])
 		return (print_error("Correct usage: <./executable> <map.cub>"), false);
+	if (!is_cub_file(argv[1]))
+		return (print_error("Error: file must be a .cub extension"), false);
 	return (true);
 }
 
 static void	draw_pixel(t_game *game, int x, int y, u_int32_t color)
 {
-	if (x >= 0 && x < WIN_WIDTH && y >= 0 && y < WIN_HEIGHT)
+	// Clamp coordinates to valid bounds
+	x = clamp(x, 0, WIN_WIDTH - 1);
+	y = clamp(y, 0, WIN_HEIGHT - 1);
+    // Check if the pixel needs to be updated
+	if (game->screen_buffer[y][x] != color)
 	{
-		if (game->screen_buffer[x][y] != color)
-		{
-			mlx_pixel_put(game->mlx, game->window, x, y, color);
-			game->screen_buffer[x][y] = color;
+        mlx_pixel_put(game->mlx, game->window, x, y, color);
+        game->screen_buffer[y][x] = color; // Update the pixel buffer
 		}
-	}
 }
 
 // *** Bresenhams line drawing algorithm
@@ -63,6 +65,8 @@ static void	draw_line(t_game *game, t_point start, t_point end, u_int32_t color)
 	y = start.y;
 	while (1)
 	{
+		x = clamp(x, 0, WIN_WIDTH - 1);
+		y = clamp(y, 0, WIN_HEIGHT - 1);
 		draw_pixel(game, x, y, color);
 		if (x == end.x && y == end.y)
 			break ;
@@ -98,7 +102,7 @@ static void	draw_player(t_game *game)
 	// draw the player
 	draw_pixel(game, player_x, player_y, 0xFF000);
 	// draw the angle representation
-	  t_point end = {rounded_end_x, rounded_end_y};
+	t_point end = {rounded_end_x, rounded_end_y};
 	draw_line(game, game->player.pos, end, 0xFFFFFF);
 }
 
@@ -129,7 +133,6 @@ int	update_player(t_game *game)
 		game->player.pos.x -= MOVE_SPEED * sin_angle;
 		game->player.pos.y += MOVE_SPEED * cos_angle;
 	}
-//	printf("Player position updated;\nx: %f\ny: %f\n", game->player.pos.x, game->player.pos.y);
 	return (0);
 }
 
@@ -154,11 +157,9 @@ static void	clear_prev_player_and_line(t_game *game)
 
 int	display(t_game *game)
 {
-//	mlx_clear_window(game->mlx, game->window);
 	clear_prev_player_and_line(game);
 //	draw_minimap(); // TODO
 	draw_player(game);
-	//printf(BOLD_RED"Players angle: %f\n"RESET, game->player.angle);
 	return (0);
 }
 
