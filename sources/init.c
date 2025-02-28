@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:40:24 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/27 00:12:55 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/02/28 23:02:58 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	init_player(t_game *game)
 {
 	game->player.pos.x = WIN_WIDTH / 2;
 	game->player.pos.y = WIN_HEIGHT / 2;
-	game->player.angle = 0.0;
+	game->player.angle = 1.5;
 	game->player.prev_pos.x = game->player.pos.x;
 	game->player.prev_pos.y = game->player.pos.y;
 	game->player.prev_angle = game->player.angle;
@@ -74,6 +74,7 @@ t_game	init_game(void) //TODO
 	t_game		game;
 
 	init_mlx(&game);
+	game.is_running = false;
 	init_screen_buffer(&game);
 	init_keys(&game);
 	init_player(&game);

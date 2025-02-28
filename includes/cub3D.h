@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 17:03:42 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/27 01:20:37 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/03/01 00:38:48 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,14 @@
 # include <time.h>
 
 // *** GAME INFORMATION ***
-# define WIN_HEIGHT 521
-# define WIN_WIDTH 1024
+# define WIN_HEIGHT 1024
+# define WIN_WIDTH 2048
 # define SIZE_P_MINIMAP 20
 # define MOVE_SPEED 0.03
-# define MOUSE_SENSITIVITY 0.0004
+# define MOUSE_SENSITIVITY 0.0001
 # define MOUSE_RESET_MARGIN 20
-# define MOUSE_RESET_THROTTLE 5 // mouse resets per second
+# define MOUSE_RESET_THROTTLE 6 // mouse resets per second
+# define MIN_FRAME_TIME 0.01667 // 60 FPS
 
 // *** KEYCODES ***
 # define ESC_KEY 65307
@@ -85,6 +86,7 @@ typedef struct s_game
 	int			last_mouse_x;
 	// pixel buffer to store the current screen state
 	u_int32_t	**screen_buffer;
+	bool		is_running;
 }	t_game;
 
 // *** INITIALIZING ***

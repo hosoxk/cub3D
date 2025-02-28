@@ -6,9 +6,12 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:47:17 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/27 01:17:51 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/03/01 00:54:57 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// TODO can add a lot of t_point structs
+// game crashes when players pos goes outside boundaries
 
 #include "../includes/cub3D.h"
 
@@ -34,132 +37,91 @@ static bool	check_input(int argc, char **argv)
 
 static void	draw_pixel(t_game *game, int x, int y, u_int32_t color)
 {
-	// Clamp coordinates to valid bounds
-	x = clamp(x, 0, WIN_WIDTH - 1);
-	y = clamp(y, 0, WIN_HEIGHT - 1);
-    // Check if the pixel needs to be updated
 	if (game->screen_buffer[y][x] != color)
 	{
-        mlx_pixel_put(game->mlx, game->window, x, y, color);
-        game->screen_buffer[y][x] = color; // Update the pixel buffer
-		}
-}
-
-// *** Bresenhams line drawing algorithm
-static void	draw_line(t_game *game, t_point start, t_point end, u_int32_t color)
-{
-	int	x;
-	int	y;
-	int	dx;
-	int	dy;
-	int	sx;
-	int	sy;
-	int	err;
-
-	dx = fabs(end.x - start.x); // calculate absolute diff in x
-	dy = fabs(end.y - start.y); // calculate absolute diff in y
-	sx = (start.x < end.x) ? 1 : -1; // step direction in x
-	sy = (start.y < end.y) ? 1 : -1; // step direction in y
-	err = dx - dy; // error value
-	x = start.x;
-	y = start.y;
-	while (1)
-	{
-		x = clamp(x, 0, WIN_WIDTH - 1);
-		y = clamp(y, 0, WIN_HEIGHT - 1);
-		draw_pixel(game, x, y, color);
-		if (x == end.x && y == end.y)
-			break ;
-		int	e2;
-		e2 = 2 * err;
-		if (e2 > -dy)
-		{
-			err -= dy;
-			x += sx;
-		}
-		if (e2 < dx)
-		{
-			err += dx;
-			y += sy;
-		}
+		mlx_pixel_put(game->mlx, game->window, x, y, color);
+		game->screen_buffer[y][x] = color;
 	}
 }
 
 static void	draw_player(t_game *game)
 {
-	int	line_length; // TODO can be removed after
-
-	line_length = 50;
-	// Calculate the endpoint of the line based on the player's angle
-    int end_x = game->player.pos.x + line_length * cos(game->player.angle);
-    int end_y = game->player.pos.y + line_length * sin(game->player.angle);
-
-    // Convert positions to integers for rendering
-    int player_x = (int)round(game->player.pos.x);
-    int player_y = (int)round(game->player.pos.y);
-    int rounded_end_x = (int)round(end_x);
-    int rounded_end_y = (int)round(end_y);
-	// draw the player
-	draw_pixel(game, player_x, player_y, 0xFF000);
-	// draw the angle representation
-	t_point end = {rounded_end_x, rounded_end_y};
-	draw_line(game, game->player.pos, end, 0xFFFFFF);
+	draw_pixel(game, (int)round(game->player.pos.x), (int)round(game->player.pos.y), 0xFF000);
 }
 
+static bool	is_valid_move(t_point point)
+{
+	if ((point.x > 0 && point.x < WIN_WIDTH - 1) && (point.y > 0 && point.y < WIN_HEIGHT - 1))
+		return (true);
+	return (false);
+}
+
+static void	clear_prev_player(t_game *game)
+{
+	draw_pixel(game, (int)round(game->player.prev_pos.x), (int)round(game->player.prev_pos.y), 0x000000); // Background color
+}
+
+// TODO turn into bool
 int	update_player(t_game *game)
 {
 	double	cos_angle;
 	double	sin_angle;
+	t_point	proposed;
 
+	proposed.x = game->player.pos.x;
+	proposed.y = game->player.pos.y;
 	cos_angle = cos(game->player.angle);
 	sin_angle = sin(game->player.angle);
 	if (game->up_key)
 	{
-		game->player.pos.x += MOVE_SPEED * cos_angle;
-		game->player.pos.y += MOVE_SPEED * sin_angle;
+		proposed.x += MOVE_SPEED * cos_angle;
+		proposed.y += MOVE_SPEED * sin_angle;
 	}
 	if (game->down_key)
 	{
-		game->player.pos.x -= MOVE_SPEED * cos_angle;
-		game->player.pos.y -= MOVE_SPEED * sin_angle;
+		proposed.x -= MOVE_SPEED * cos_angle;
+		proposed.y -= MOVE_SPEED * sin_angle;
 	}
 	if (game->left_key)
 	{
-		game->player.pos.x += MOVE_SPEED * sin_angle;
-		game->player.pos.y -= MOVE_SPEED * cos_angle;
+		proposed.x += MOVE_SPEED * sin_angle;
+		proposed.y -= MOVE_SPEED * cos_angle;
 	}
 	if (game->right_key)
 	{
-		game->player.pos.x -= MOVE_SPEED * sin_angle;
-		game->player.pos.y += MOVE_SPEED * cos_angle;
+		proposed.x -= MOVE_SPEED * sin_angle;
+		proposed.y += MOVE_SPEED * cos_angle;
 	}
+	// clamp players pos within screen boundaries
+	if (is_valid_move(proposed))
+	{
+		clear_prev_player(game);
+		game->player.prev_pos.x = game->player.pos.x;
+		game->player.prev_pos.y = game->player.pos.y;
+		game->player.pos.x = proposed.x;
+		game->player.pos.y = proposed.y;
+	}
+	// Update player angle
+	if (game->last_mouse_x != WIN_WIDTH / 2)
+	{
+		int delta_x = game->last_mouse_x - (WIN_WIDTH / 2);
+        
+		game->player.angle += delta_x * MOUSE_SENSITIVITY;
+		while (game->player.angle > 2 * M_PI)
+			game->player.angle -= 2 * M_PI;
+		while (game->player.angle < 0)
+			game->player.angle += 2 * M_PI;
+		game->last_mouse_x = WIN_WIDTH / 2;
+	}
+	game->player.prev_angle = game->player.angle;
 	return (0);
-}
-
-static void	clear_prev_player_and_line(t_game *game)
-{
-	    // Clear the previous player position (set it back to background color)
-    int prev_player_x = (int)round(game->player.prev_pos.x);
-    int prev_player_y = (int)round(game->player.prev_pos.y);
-    draw_pixel(game, prev_player_x, prev_player_y, 0x000000); // Background color
-
-    // Clear the previous line
-    int prev_end_x = game->player.prev_pos.x + 50 * cos(game->player.prev_angle);
-    int prev_end_y = game->player.prev_pos.y + 50 * sin(game->player.prev_angle);
-	t_point end = {(int)round(prev_end_x), (int)round(prev_end_y)};
-    draw_line(game, game->player.prev_pos, end, 0x000000);
-
-    // Update the previous player position and angle
-    game->player.prev_pos.x = game->player.pos.x;
-    game->player.prev_pos.y = game->player.pos.y;
-    game->player.prev_angle = game->player.angle;
 }
 
 int	display(t_game *game)
 {
-	clear_prev_player_and_line(game);
-//	draw_minimap(); // TODO
 	draw_player(game);
+//	draw_map(); // TODO
+//	draw_minimap(); // TODO
 	return (0);
 }
 
@@ -173,7 +135,8 @@ int	main(int argc, char **argv)
 	// *** SET UP EVENTS ***
 	setup_hooks(&game);
 	// *** GAME LOOP ***
+	game.is_running = true;
 	mlx_loop(game.mlx);
-	free_mlx(&game);
+	free_game(&game);
 	return (0);
 }
