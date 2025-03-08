@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 17:03:42 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/03/01 00:38:48 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:25:23 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 # include <time.h>
 
 // *** GAME INFORMATION ***
-# define WIN_HEIGHT 1024
-# define WIN_WIDTH 2048
+# define WIN_HEIGHT 512
+# define WIN_WIDTH 1024
 # define SIZE_P_MINIMAP 20
-# define MOVE_SPEED 0.03
+# define MOVE_SPEED 0.009
 # define MOUSE_SENSITIVITY 0.0001
 # define MOUSE_RESET_MARGIN 20
 # define MOUSE_RESET_THROTTLE 6 // mouse resets per second

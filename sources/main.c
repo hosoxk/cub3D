@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:47:17 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/03/01 00:54:57 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:36:01 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ static bool	check_input(int argc, char **argv)
 
 static void	draw_pixel(t_game *game, int x, int y, u_int32_t color)
 {
+	if (x >= WIN_WIDTH || y >= WIN_HEIGHT ||
+			x <= 0 || y <= 0) // TODO ;radius hardcoded
+		return ;
 	if (game->screen_buffer[y][x] != color)
 	{
 		mlx_pixel_put(game->mlx, game->window, x, y, color);
@@ -46,7 +49,25 @@ static void	draw_pixel(t_game *game, int x, int y, u_int32_t color)
 
 static void	draw_player(t_game *game)
 {
-	draw_pixel(game, (int)round(game->player.pos.x), (int)round(game->player.pos.y), 0xFF000);
+	int	radius;
+	int	x;
+	int	y;
+
+	radius = 5; // TODO eventually size according to screen
+	y = -radius;
+	while (y <= radius)
+	{
+		x = -radius;
+		while (x <= radius)
+		{
+			if ((x * x + y * y) <= (radius * radius))
+			{
+				draw_pixel(game, game->player.pos.x + x, game->player.pos.y + y, 0xFF000);
+			}
+			x++;
+		}
+		y++;
+	}
 }
 
 static bool	is_valid_move(t_point point)
@@ -58,7 +79,25 @@ static bool	is_valid_move(t_point point)
 
 static void	clear_prev_player(t_game *game)
 {
-	draw_pixel(game, (int)round(game->player.prev_pos.x), (int)round(game->player.prev_pos.y), 0x000000); // Background color
+	int	radius;
+	int	x;
+	int	y;
+
+	radius = 5; // TODO eventually size according to screen
+	y = -radius;
+	while (y <= radius)
+	{
+		x = -radius;
+		while (x <= radius)
+		{
+			if ((x * x + y * y) <= (radius * radius))
+			{
+				draw_pixel(game, game->player.pos.x + x, game->player.pos.y + y, 0x000000);
+			}
+			x++;
+		}
+		y++;
+	}
 }
 
 // TODO turn into bool
