@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 17:03:42 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/03/08 01:25:23 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:52:51 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@
 # include <math.h>
 # include <stdbool.h>
 # include <stdio.h>
-# include "../sources/libft/libft.h"
-# include "../sources/minilibx-linux/mlx.h"
 # include <time.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include "../sources/libft/libft.h"
+# include "../sources/libft/sources/get_next_line/get_next_line.h"
+# include "../sources/minilibx-linux/mlx.h"
 
 // *** GAME INFORMATION ***
 # define WIN_HEIGHT 512
@@ -74,7 +77,7 @@ typedef struct s_map
 typedef struct s_game
 {
 	t_player	player;
-//	t_map		map;
+	t_map		map;
 	void		*mlx;
 	void		*window;
 	bool		up_key;
@@ -90,7 +93,7 @@ typedef struct s_game
 }	t_game;
 
 // *** INITIALIZING ***
-t_game	init_game(void);
+t_game	init_game(char *filename);
 
 // *** SETUP EVENTS ***
 void	setup_hooks(t_game *game);

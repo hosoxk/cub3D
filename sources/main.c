@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:47:17 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/03/08 01:36:01 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:43:05 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int	main(int argc, char **argv)
 
 	if (!check_input(argc, argv))
 		return (1);
-	game = init_game();	//TODO
+	game = init_game(argv[1]);
 	// *** SET UP EVENTS ***
 	setup_hooks(&game);
 	// *** GAME LOOP ***
