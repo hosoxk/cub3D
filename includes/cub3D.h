@@ -17,8 +17,10 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include "../sources/libft/libft.h"
+# include "../sources/libft/sources/get_next_line/get_next_line.h"
 # include "../sources/minilibx-linux/mlx.h"
 # include <time.h>
+# include <fcntl.h>
 
 // *** GAME INFORMATION ***
 # define WIN_HEIGHT 512
@@ -29,7 +31,7 @@
 # define MOUSE_RESET_MARGIN 20
 # define MOUSE_RESET_THROTTLE 6 // mouse resets per second
 # define MIN_FRAME_TIME 0.01667 // 60 FPS
-
+# define FILE_LINE_CAP 32
 // *** KEYCODES ***
 # define ESC_KEY 65307
 # define LEFT_ARROW 65361
@@ -69,12 +71,20 @@ typedef struct s_map
 	char		**data;
 	int			width;
 	int			height;
+	// config elements
+	char		*no_texture;
+	char		*so_texture;
+	char		*ea_texture;
+	char		*we_texture;
+	int			floor_color;
+	int			ceiling_color;
+
 }	t_map;
 
 typedef struct s_game
 {
 	t_player	player;
-//	t_map		map;
+	t_map		map;
 	void		*mlx;
 	void		*window;
 	bool		up_key;
@@ -91,6 +101,7 @@ typedef struct s_game
 
 // *** INITIALIZING ***
 t_game	init_game(void);
+bool	parse_cub_file(const char *filename, t_map *map);
 
 // *** SETUP EVENTS ***
 void	setup_hooks(t_game *game);
@@ -107,5 +118,8 @@ int		close_window(void);
 // *** UTILS ***
 void	print_error(char *str);
 void	free_game(t_game *game);
+void	print_map_data(t_map *data);
+char	*skip_leading_whitespaces(const char *line);
+bool	is_empty_line(const char *line);
 
 #endif

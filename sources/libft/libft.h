@@ -87,5 +87,8 @@ int					ft_tab_len(char **tab);
 void				ft_print_tab(char **tab);
 char				*ft_strappend(char *str, char c);
 int					clamp(int value, int min, int max);
+bool				ft_isspace(char c);
+char				*ft_trim(const char *str);
+int					ft_arrlen (char **arr);
 
 #endif

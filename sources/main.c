@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// TODO	ERRORS; "Error\n" followed by explicit error message !!!!!!!!!!!!!!
 // TODO can add a lot of t_point structs
-// game crashes when players pos goes outside boundaries
 
 #include "../includes/cub3D.h"
 
@@ -159,7 +159,7 @@ int	update_player(t_game *game)
 int	display(t_game *game)
 {
 	draw_player(game);
-//	draw_map(); // TODO
+//	draw_screen(); // TODO
 //	draw_minimap(); // TODO
 	return (0);
 }
@@ -170,7 +170,10 @@ int	main(int argc, char **argv)
 
 	if (!check_input(argc, argv))
 		return (1);
-	game = init_game();	//TODO
+	game = init_game();
+	if (!parse_cub_file(argv[1], &game.map))
+		return (free_game(&game), 1);
+	print_map_data(&game.map);
 	// *** SET UP EVENTS ***
 	setup_hooks(&game);
 	// *** GAME LOOP ***

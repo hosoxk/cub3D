@@ -41,7 +41,6 @@ static void	init_keys(t_game *game)
 	game->last_mouse_x = game->mouse_x;
 }
 
-// TODO turn into init_player_and_map
 static void	init_player(t_game *game)
 {
 	game->player.pos.x = WIN_WIDTH / 2;
@@ -68,7 +67,20 @@ static bool	init_screen_buffer(t_game *game)
 	return (true);
 }
 
-t_game	init_game(void) //TODO
+static void	init_map(t_game *game)
+{
+	game->map.width = 0;
+	game->map.height = 0;
+	game->map.data = NULL;
+	game->map.no_texture = '\0';
+	game->map.ea_texture = '\0';
+	game->map.so_texture = '\0';
+	game->map.we_texture = '\0';
+	game->map.floor_color = -1; // will point out error
+	game->map.ceiling_color = -1;
+}
+
+t_game	init_game(void)
 {
 	printf(BOLD_BLUE"Initializing game\n"RESET);
 	t_game		game;
@@ -78,6 +90,6 @@ t_game	init_game(void) //TODO
 	init_screen_buffer(&game);
 	init_keys(&game);
 	init_player(&game);
-//	game.map = init_map();
+	init_map(&game);
 	return (game);
 }
