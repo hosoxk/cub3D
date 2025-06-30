@@ -6,7 +6,7 @@
 /*   By: yde-rudd <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:40:24 by yde-rudd          #+#    #+#             */
-/*   Updated: 2025/02/28 23:02:58 by yde-rudd         ###   ########.fr       */
+/*   Updated: 2025/03/08 01:57:29 by yde-rudd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static bool	init_screen_buffer(t_game *game)
 	}
 	return (true);
 }
-
+/*
 static void	init_map(t_game *game)
 {
 	game->map.width = 0;
@@ -78,9 +78,31 @@ static void	init_map(t_game *game)
 	game->map.we_texture = '\0';
 	game->map.floor_color = -1; // will point out error
 	game->map.ceiling_color = -1;
+}*/
+
+static t_map	init_map(char *filename)
+{
+	int		fd;
+	char	*line;
+	t_map	map;
+
+	map.data = NULL;
+	map.height = 0;
+	map.width = 0;
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (print_error("Error opening file"), map);
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+//		parse_line(game, line); // TODO
+		free(line);
+	}
+	close(fd);
+	return (map);
 }
 
-t_game	init_game(void)
+t_game	init_game(char *filename)
 {
 	printf(BOLD_BLUE"Initializing game\n"RESET);
 	t_game		game;
@@ -90,6 +112,6 @@ t_game	init_game(void)
 	init_screen_buffer(&game);
 	init_keys(&game);
 	init_player(&game);
-	init_map(&game);
+	game.map = init_map(filename);
 	return (game);
 }
